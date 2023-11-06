@@ -8,18 +8,19 @@ const alertMessage = document.getElementById("alert");
 const todoFilter = document.querySelectorAll(".todo-filter")
 const plusButton = document.querySelector("#button")
 let todos = JSON.parse(localStorage.getItem("savedtodos")) || [];
-
-
-console.log(todoFilter);
-
+let editing = false;
 const e2p = (s) => s.toString().replace(/\d/g, (d) => "۰۱۲۳۴۵۶۷۸۹"[d]);
 
 const deleteAllHandler = () => {
+  if (editing === false) {
   todos = [];
   saveToLocalStorage();
   displayTodos();
   showAlert("تمامی کار ها با موفقیت حذف شدند !", "success")
-};
+  }else{
+  showAlert("درحال ویرایش هستید!" , "error")
+}
+}
 
 const displayTodos = () => {
   tasksBody.innerHTML = "";
@@ -89,11 +90,17 @@ const addHandler = () => {
 };
 
 const deleteHandler = (id) => {
-    const newTodos = todos.filter((todo) => todo.id!==id)
+  if (editing === false){
+        const newTodos = todos.filter((todo) => todo.id!==id)
     todos=newTodos;
     displayTodos()
     saveToLocalStorage()
     showAlert("task deleted" , "success")
+  }else{
+    showAlert("درحال ویرایش هستید!" , "error")
+  }
+
+
 }
 const toggleHandler = (id) => {
 
@@ -104,6 +111,7 @@ todo.completed = !todo.completed
   
 }
 const editHandler = (id) => {
+  editing = true;
   const todo = todos.find(todo =>  todo.id === id)
   taskInput.value = todo.task;
   dateInput.value = todo.date;
@@ -115,7 +123,6 @@ const editHandler = (id) => {
 }
 const applyEditHandler = event =>{
   id =+event.target.dataset.id;
-  console.log(id);
   const todo = todos.find((todo) => todo.id === id)
 
    todo.task = taskInput.value;
@@ -126,6 +133,7 @@ const applyEditHandler = event =>{
   saveToLocalStorage()
   showAlert("ویرایش با موفقیت انجام شد !")
   taskInput.value ="";
+  editing = false;
 }
 const filterHandler = (event) => {
   
@@ -133,7 +141,6 @@ const filterHandler = (event) => {
   let newTasks = {}
   const filter = event.target.dataset.filter;
   newTasks = todos.filter(item => {
-    console.log(item);
     switch (filter) {
       case "all":
         return item ;
@@ -159,3 +166,9 @@ addButton.addEventListener("click", addHandler);
 deleteAll.addEventListener("click", deleteAllHandler);
 editButton.addEventListener("click", applyEditHandler);
 todoFilter.forEach(item => {item.addEventListener("click" , filterHandler)})
+
+for (let index =613; index >= 0 ; index = index-12) {
+  console.log(index);
+  continue;
+}
+
